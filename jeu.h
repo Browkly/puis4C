@@ -1,36 +1,32 @@
 #ifndef _JEU_H
 #define _JEU_H 0
 
-typedef struct _player
-{
-    int number_player;
-    int difficulty; // 0 : Human ; 1 : Easy ; 2 : Normal ; 3 : Hard
-    int last_x;
-    int last_y;
+typedef struct _player {
+  int number_player;
+  int difficulty;  // 0 : Human ; 1 : Easy ; 2 : Normal ; 3 : Hard
+  int last_x;
+  int last_y;
 } player;
 
-typedef struct _grid
-{
-    int full_case; // Number of full cases (those which are != 0)
-    int g[6][7];
+typedef struct _grid {
+  int full_case;  // Number of full cases (those which are != 0)
+  int g[6][7];
 } grid;
 
-typedef struct _game
-{
-    player *player_1;
-    player *player_2;
-    grid *g;
+typedef struct _game {
+  player *player_1;
+  player *player_2;
+  grid *g;
 } game;
 
-typedef enum _ERROR
-{
-    NO_ERROR,
-    MEMORY_ERROR,
-    DIFFICULTY_ERROR,
-    NO_PLAYER_ERROR,
-    NO_GRID_ERROR,
-    COOR_ERROR,
-    CHOICE_ERROR
+typedef enum _ERROR {
+  NO_ERROR,
+  MEMORY_ERROR,
+  DIFFICULTY_ERROR,
+  NO_PLAYER_ERROR,
+  NO_GRID_ERROR,
+  COOR_ERROR,
+  CHOICE_ERROR
 } ERROR;
 
 /**
@@ -52,7 +48,8 @@ grid *init_grid(void);
 player *init_player(int number, int difficulty);
 
 /**
- * @brief Initialize the game depending on the player 1 and 2 parameters (if == 0 human ; if == 1 easy AI ; if == 2 normal AI ; if == 2 difficult AI)
+ * @brief Initialize the game depending on the player 1 and 2 parameters (if ==
+ * 0 human ; if == 1 easy AI ; if == 2 normal AI ; if == 2 difficult AI)
  *
  * @param player_1
  * @param player_2
@@ -96,15 +93,6 @@ int round_player(player *p, grid *g);
  * @return the column choice of the human
  */
 int round_human(player *p, grid *g);
-
-/**
- * @brief Interact with the AI to ask it its choice
- *
- * @param player
- * @param grid
- * @return the column choice of the AI
- */
-int round_AI(player *p, grid *g);
 
 ERROR getError(void);
 
