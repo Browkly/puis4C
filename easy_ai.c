@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "ai_utils.h"
+
 int get_random_column(player* p, grid* grid) {
   int i, sz, r;
   int* free_cols;
