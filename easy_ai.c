@@ -15,7 +15,7 @@ int get_random_number(int max) {
   int n = 0;
   srand(time(NULL));
   n = rand() % max;
-  printf("Nombre aléatoire généré: %d\n", n);
+  // printf("Nombre aléatoire généré: %d\n", n);
   return n;
 }
 
