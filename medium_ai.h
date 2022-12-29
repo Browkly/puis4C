@@ -1,7 +1,7 @@
 #ifndef MEDIUM_AI_H
 #define MEDIUM_AI_H
 
-// #include "easy_ai.h"
+#include "easy_ai.h"
 
 int get_vertical_align(grid *, player *);        // done
 int get_horizontal_align(grid *, player *);      // done

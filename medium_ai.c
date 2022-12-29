@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "easy_ai.h"
+
 int extern error;
 
 // param p => le joueur précédent l'ia
