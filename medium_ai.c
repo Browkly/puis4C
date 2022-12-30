@@ -6,7 +6,12 @@
 #include "easy_ai.h"
 int extern error;
 
-// param p => le joueur précédent l'ia
+/**
+ * @brief Return 1 if a vertical align with the color of the player in parameter
+ * is found, 0 else
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_vertical_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
   int x = p->last_x;
@@ -25,6 +30,12 @@ int get_vertical_align(grid* g, player* p) {
   return length;
 }
 
+/**
+ * @brief Return 1 if a horizontal align with the color of the player in
+ * parameter is found, 0 else
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_horizontal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
   int x = p->last_x;
@@ -58,6 +69,12 @@ int get_horizontal_align(grid* g, player* p) {
   return length;
 }
 
+/**
+ * @brief Return 1 if a left diagonal align with the color of the player in
+ * parameter is found, 0 else
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_left_diagonal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
   int x = p->last_x;
@@ -90,6 +107,12 @@ int get_left_diagonal_align(grid* g, player* p) {
   return 0;
 }
 
+/**
+ * @brief Return 1 if a right diagonal align with the color of the player in
+ * parameter is found, 0 else
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_right_diagonal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
   int x = p->last_x;
@@ -122,6 +145,12 @@ int get_right_diagonal_align(grid* g, player* p) {
   return 0;
 }
 
+/**
+ * @brief Returns the max between 4 ints, or 0 if they are all equal to each
+ * other
+ * @param int a, int b, int c, int d
+ * @return int
+ */
 int get_max(int a, int b, int c, int d) {
   if (a == 0 && b == 0 && c == 0 && d == 0) {
     return 0;
@@ -138,18 +167,12 @@ int get_max(int a, int b, int c, int d) {
   return d;
 }
 
-// Returns the direction of the biggest align created by enemy player's last
-// move
-// Returns 0 if no align
-// Returns 1 if player vertical align
-// Returns 2 if player horizontal align
-// Returns 3 if player left diagonal align
-// Returns 4 if player right diagonal align
-
-// Returns -1 if ai vertical align
-// Returns -2 if ai horizontal align
-// Returns -3 if ai left diagonal align
-// Returns -4 if ai right diagonal align
+/**
+ * @brief Return an int based of the direction of the biggest align, and if it
+ * belongs to p1 or p2, return 0 if there is no align
+ * @param grid * g, player * p, player * ai
+ * @return int
+ */
 int find_biggest_align(grid* g, player* p, player* ai) {
   int p1, p2, p3, p4;
   int player_align = 0;
@@ -175,7 +198,11 @@ int find_biggest_align(grid* g, player* p, player* ai) {
   }
 }
 
-// Return 1 if the choice is valid for the ai to play a move
+/**
+ * @brief Return 1 if the move at column x is valid, else return 0.
+ * @param grid * g, player * p, int x
+ * @return int
+ */
 int is_valid(grid* g, player* p, int x) {
   if (0 <= x && x < NB_COL && g->g[x][NB_LINES - 1] == 0) {
     return 1;
@@ -183,7 +210,12 @@ int is_valid(grid* g, player* p, int x) {
   return 0;
 }
 
-// Returns 1 if the tile is reachable, 0 else.
+/**
+ * @brief Return 1 if the tile at coordinates (x, y) is reachable, else return
+ * 0.
+ * @param grid * g, player * p, int x, int y
+ * @return int
+ */
 int is_reachable(grid* g, player* p, int x, int y) {
   if (y == 0 || g->g[x][y - 1] != 0 && is_valid(g, p, x)) {
     return 1;
@@ -191,8 +223,12 @@ int is_reachable(grid* g, player* p, int x, int y) {
   return 0;
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the left of horizontal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_left_border_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -204,8 +240,12 @@ int is_left_border_horizontal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, p->last_y);
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the right of horizontal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_right_border_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -217,8 +257,12 @@ int is_right_border_horizontal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, p->last_y);
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the left of diagonal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_left_left_diagonal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -231,8 +275,12 @@ int is_left_left_diagonal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, y);
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the right of diagonal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_right_left_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -244,8 +292,12 @@ int is_right_left_horizontal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, y);
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the left of diagonal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_left_right_diagonal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -258,8 +310,12 @@ int is_left_right_diagonal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, y);
 }
 
-// Return if the tile adjacent to the align is reachable or not so the ai
-// should or not defend
+/**
+ * @brief Return 1 if the column to the right of diagonal align is
+ * reachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int is_right_right_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
   int x = p->last_x;
@@ -272,7 +328,12 @@ int is_right_right_horizontal_align_reachable(grid* g, player* p) {
   return is_reachable(g, p, x, y);
 }
 
-// Returns the left border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the left border of an horizontal align, or -1 is
+ * unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_left_border_horizontal_align(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -289,7 +350,12 @@ int get_left_border_horizontal_align(grid* g, player* p) {
   return -1;
 }
 
-// Returns the right border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the right border of an horizontal align, or -1
+ * is unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_right_border_horizontal_align(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -306,7 +372,12 @@ int get_right_border_horizontal_align(grid* g, player* p) {
   return -1;
 }
 
-// Returns the left border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the left border of a diagonal align, or -1 is
+ * unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_left_border_left_diagonal(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -324,7 +395,12 @@ int get_left_border_left_diagonal(grid* g, player* p) {
   return -1;
 }
 
-// Returns the right border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the right border of a diagonal align, or -1 is
+ * unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_right_border_left_diagonal(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -342,7 +418,12 @@ int get_right_border_left_diagonal(grid* g, player* p) {
   return -1;
 }
 
-// Returns the left border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the left border of a diagonal align, or -1 is
+ * unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_left_border_right_diagonal(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -360,7 +441,12 @@ int get_left_border_right_diagonal(grid* g, player* p) {
   return -1;
 }
 
-// Returns the right border of the align if it is reachable, else, returns -1
+/**
+ * @brief Returns the column of the right border of a diagonal align, or -1 is
+ * unreachable
+ * @param grid * g, player * p
+ * @return int
+ */
 int get_right_border_right_diagonal(grid* g, player* p) {
   int x = p->last_x;
   int y = p->last_y;
@@ -378,21 +464,19 @@ int get_right_border_right_diagonal(grid* g, player* p) {
   return -1;
 }
 
-// Returns the column of the move selected by the medium difficulty ai, if the
-// ai doesn't find any optimal move (with its definitions), a random one is
-// selected
+/**
+ * @brief Returns the column of the move selected by the medium difficulty ai,
+ * if the ai doesn't find any optimal move (with its definitions), a random one
+ * is selected
+ * @param grid * g, player * last_p, player * ai
+ * @return int
+ */
 int get_medium_ai_move(grid* g, player* last_p, player* ai) {
   int x = -1;
-
-  // Implémenter un moyen de retourner le plus grand alignement entre celui
-  // enemi et celui allié Agir en conséquence (offensif ou défensif)
-
   // Gérer les erreurs possibles
-
   if (find_biggest_align(g, last_p, ai) == 0) {
     return random_choice(g);  // Coup aléatoire
   }
-
   if (find_biggest_align(g, last_p, ai) == 1) {
     // Cas d'alignement vertical du joueur
     if (is_column_full(g, last_p->last_x) == 0) {
