@@ -562,11 +562,9 @@ int get_medium_ai_move(grid* g, player* last_p, player* ai) {
   } else if (find_biggest_align(g, last_p, ai) == -2) {
     // Cas d'alignement horizontal AI
     if (is_left_border_horizontal_align_reachable(g, ai) == 1) {
-      // Placement d'un token à gauche de l'alignement si possible
       x = get_left_border_horizontal_align(g, ai);
     }
-    // Placement d'un token à droite de l'alignement si possible et si
-    // l'alignement gauche est impossible
+    // Placement d'un token à droite de l'alignement si possible
     else if (is_right_border_horizontal_align_reachable(g, ai) == 1) {
       x = get_right_border_horizontal_align(g, ai);
     }
