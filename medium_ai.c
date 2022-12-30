@@ -1,5 +1,6 @@
 #include "medium_ai.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,6 +15,8 @@ int extern error;
  */
 int get_vertical_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   int color = p->number_player;
@@ -38,6 +41,8 @@ int get_vertical_align(grid* g, player* p) {
  */
 int get_horizontal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   int color = p->number_player;
@@ -77,6 +82,8 @@ int get_horizontal_align(grid* g, player* p) {
  */
 int get_left_diagonal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   int color = p->number_player;
@@ -115,6 +122,8 @@ int get_left_diagonal_align(grid* g, player* p) {
  */
 int get_right_diagonal_align(grid* g, player* p) {
   // Gestion des erreurs à implémenter
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   int color = p->number_player;
@@ -174,6 +183,9 @@ int get_max(int a, int b, int c, int d) {
  * @return int
  */
 int find_biggest_align(grid* g, player* p, player* ai) {
+  assert(g);
+  assert(p);
+  assert(ai);
   int p1, p2, p3, p4;
   int player_align = 0;
   int ai_align = 0;
@@ -204,6 +216,8 @@ int find_biggest_align(grid* g, player* p, player* ai) {
  * @return int
  */
 int is_valid(grid* g, player* p, int x) {
+  assert(g);
+  assert(p);
   if (0 <= x && x < NB_COL && g->g[x][NB_LINES - 1] == 0) {
     return 1;
   }
@@ -217,6 +231,8 @@ int is_valid(grid* g, player* p, int x) {
  * @return int
  */
 int is_reachable(grid* g, player* p, int x, int y) {
+  assert(g);
+  assert(p);
   if (y == 0 || g->g[x][y - 1] != 0 && is_valid(g, p, x)) {
     return 1;
   }
@@ -230,6 +246,8 @@ int is_reachable(grid* g, player* p, int x, int y) {
  * @return int
  */
 int is_left_border_horizontal_align_reachable(grid* g, player* p) {
+  assert(g);
+  assert(p);
   // Gérer les erreurs possibles
   int x = p->last_x;
   while (x > 0 && g->g[x][p->last_y] == p->number_player) {
@@ -248,6 +266,8 @@ int is_left_border_horizontal_align_reachable(grid* g, player* p) {
  */
 int is_right_border_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
+  assert(g);
+  assert(p);
   int x = p->last_x;
   while (x < NB_COL && g->g[x][p->last_y] == p->number_player) {
     // Tant que la case a gauche est du meme joueur et sup a 0 => on décale a
@@ -265,6 +285,8 @@ int is_right_border_horizontal_align_reachable(grid* g, player* p) {
  */
 int is_left_left_diagonal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   // Tant que x > 0 et y
@@ -283,6 +305,8 @@ int is_left_left_diagonal_align_reachable(grid* g, player* p) {
  */
 int is_right_left_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   while (x < NB_COL && y < NB_LINES && g->g[x][y] == p->number_player) {
@@ -300,6 +324,8 @@ int is_right_left_horizontal_align_reachable(grid* g, player* p) {
  */
 int is_left_right_diagonal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   // Tant que x > 0 et y
@@ -318,6 +344,8 @@ int is_left_right_diagonal_align_reachable(grid* g, player* p) {
  */
 int is_right_right_horizontal_align_reachable(grid* g, player* p) {
   // Gérer les erreurs possibles
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   // Tant que x > 0 et y
@@ -335,6 +363,8 @@ int is_right_right_horizontal_align_reachable(grid* g, player* p) {
  * @return int
  */
 int get_left_border_horizontal_align(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -357,6 +387,8 @@ int get_left_border_horizontal_align(grid* g, player* p) {
  * @return int
  */
 int get_right_border_horizontal_align(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -379,6 +411,8 @@ int get_right_border_horizontal_align(grid* g, player* p) {
  * @return int
  */
 int get_left_border_left_diagonal(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -402,6 +436,8 @@ int get_left_border_left_diagonal(grid* g, player* p) {
  * @return int
  */
 int get_right_border_left_diagonal(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -425,6 +461,8 @@ int get_right_border_left_diagonal(grid* g, player* p) {
  * @return int
  */
 int get_left_border_right_diagonal(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -448,6 +486,8 @@ int get_left_border_right_diagonal(grid* g, player* p) {
  * @return int
  */
 int get_right_border_right_diagonal(grid* g, player* p) {
+  assert(g);
+  assert(p);
   int x = p->last_x;
   int y = p->last_y;
   if (is_left_border_horizontal_align_reachable(g, p) == 1) {
@@ -472,6 +512,9 @@ int get_right_border_right_diagonal(grid* g, player* p) {
  * @return int
  */
 int get_medium_ai_move(grid* g, player* last_p, player* ai) {
+  assert(g);
+  assert(p);
+  assert(ai);
   int x = -1;
   // Gérer les erreurs possibles
   if (find_biggest_align(g, last_p, ai) == 0) {
