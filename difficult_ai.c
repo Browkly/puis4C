@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 extern error;
+
 int has_winning_move(grid* g) { return 0; }
 
 int find_winning_move(grid* g) { return 0; }
