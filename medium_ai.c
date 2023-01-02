@@ -7,6 +7,10 @@
 #include "easy_ai.h"
 int extern error;
 
+// A CHANGER : NOUEVELLE IDEE A IMPLEMENTER : L IA DEVRA UNIQUEMENT TENTER DE
+// BLOQUER LES ALIGNEMENTS QUAND ELLE EN DETECTE : SCANNER POUR DETECTER LES
+// ALIGNEMENTS DE LONGEUUR 2 ET 3 ET LES BLOQUER SI NECESSAIRE
+
 /**
  * @brief Return 1 if a vertical align with the color of the player in parameter
  * is found, 0 else
