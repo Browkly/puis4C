@@ -6,7 +6,12 @@
 
 #include "jeu.h"
 
-// Retourne la colonne ou le meilleur coup peut être joué
+/**
+ * @brief Returns the column of the best move possible with the current game
+ * state, for the ally player.
+ * @param grid * g, player * ally, player * enemy
+ * @return int
+ */
 int difficult_ai_move(grid* g, player* ally, player* enemy) {
   int best_score = -1000;
   int best_move = 0;
@@ -28,6 +33,13 @@ int difficult_ai_move(grid* g, player* ally, player* enemy) {
   return i;
 }
 
+/**
+ * @brief This function uses the minimax algorithm to look for the best move
+ * playable by the ai. It finds the best move by increasing and decreasing a
+ * score, regarding the consequences of a given move.
+ * @param grid * g, int is_maximizing, player * ally, player * enemy
+ * @return int
+ */
 int minimax(grid* g, int is_maximizing, player* ally, player* enemy) {
   // check if the AI can win:
   if (check_win(g, ally) == 1) {
@@ -82,5 +94,84 @@ int minimax(grid* g, int is_maximizing, player* ally, player* enemy) {
   }
 }
 
-// TODO : win check functions
-int check_win(grid* g, player* player) { return 0; }
+/**
+ * @brief Returns 1 if the player has a vertical align at given coordinates, 0
+ * else
+ * @param grid * g, player * p, int x, int y
+ * @return int
+ */
+int vertical_align(grid* g, player* p, int x, int y) {
+  if ((y + 3) < NB_LINES && g->g[y][x] == p->number_player && g->g[y + 1][x] &&
+      g->g[y + 2][x] == p->number_player &&
+      g->g[y + 3][x] == p->number_player) {
+    return 1;
+  }
+  return 0;
+}
+
+/**
+ * @brief Returns 1 if the player has a horizontal align at given coordinates, 0
+ * else
+ * @param grid * g, player * p, int x, int y
+ * @return int
+ */
+int horizontal_align(grid* g, player* p, int x, int y) {
+  if ((x + 3) < NB_COL && g->g[y][x] == p->number_player &&
+      g->g[y][x + 1] == p->number_player &&
+      g->g[y][x + 2] == p->number_player &&
+      g->g[y][x + 3] == p->number_player) {
+    return 1;
+  }
+  return 0;
+}
+
+/**
+ * @brief Returns 1 if the player has a left diagonal align at given
+ * coordinates, 0 else
+ * @param grid * g, player * p, int x, int y
+ * @return int
+ */
+int left_diagonal_align(grid* g, player* p, int x, int y) {
+  if ((x + 3) < NB_COL && (y - 3) >= 0 && g->g[x][y] == p->number_player &&
+      g->g[x + 1][y - 1] == p->number_player &&
+      g->g[x + 2][y - 2] == p->number_player &&
+      g->g[x + 3][y - 3] == p->number_player) {
+    return 1;
+  }
+  return 0;
+}
+
+/**
+ * @brief Returns 1 if the player has a right diagonal align at given
+ * coordinates, 0 else
+ * @param grid * g, player * p, int x, int y
+ * @return int
+ */
+int right_diagonal_align(grid* g, player* p, int x, int y) {
+  if ((x - 3) >= 0 && (y - 3 >= 0) && g->g[x][y] == p->number_player &&
+      g->g[x - 1][y - 1] == p->number_player &&
+      g->g[x - 2][y - 2] == p->number_player &&
+      g->g[x - 3][y - 3] == p->number_player) {
+    return 1;
+  }
+  return 0;
+}
+
+/**
+ * @brief Returns 1 if the player has a win, else, return 0
+ * @param grid * g, player * p
+ * @return int
+ */
+int check_win(grid* g, player* p) {
+  for (int i = 0; i < NB_COL; i++) {
+    for (int j = 0; j < NB_LINES; j++) {
+      if (vertical_align(g, p, i, j) == 1 ||
+          horizontal_align(g, p, i, j) == 1 ||
+          left_diagonal_align(g, p, i, j) == 1 ||
+          right_diagonal_align(g, p, i, j) == 1) {
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
