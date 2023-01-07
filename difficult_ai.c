@@ -4,26 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "jeu.h"
-
-/**
- * @brief Returns the column of the best move possible with the current game
- * state, for the ally player.
- * @param grid * g, player * ally, player * enemy
- * @return int
- */
-int difficult_ai_move(grid* g, player* ally, player* enemy) {
-  int col = get_best_column(g, ally, enemy);
-  return col;
-}
-
-/**
- * @brief Returns 1 if the player has a vertical align at given coordinates, 0
- * else
- * @param grid * g, player * p, int x, int y
- * @return int
- */
-int vertical_align(grid* g, player* p, int x, int y) {
+int vertical_align_dif(grid* g, player* p, int x, int y) {
   if ((y + 3) < NB_LINES && g->g[y][x] == p->number_player && g->g[y + 1][x] &&
       g->g[y + 2][x] == p->number_player &&
       g->g[y + 3][x] == p->number_player) {
@@ -32,12 +13,6 @@ int vertical_align(grid* g, player* p, int x, int y) {
   return 0;
 }
 
-/**
- * @brief Returns 1 if the player has a horizontal align at given coordinates, 0
- * else
- * @param grid * g, player * p, int x, int y
- * @return int
- */
 int horizontal_align(grid* g, player* p, int x, int y) {
   if (x < 4 && y >= 0 && y < NB_LINES && g->g[y][x] == p->number_player &&
       g->g[y][x + 1] == p->number_player &&
@@ -48,13 +23,7 @@ int horizontal_align(grid* g, player* p, int x, int y) {
   return 0;
 }
 
-/**
- * @brief Returns 1 if the player has a left diagonal align at given
- * coordinates, 0 else
- * @param grid * g, player * p, int x, int y
- * @return int
- */
-int left_diagonal_align(grid* g, player* p, int x, int y) {
+int left_diagonal_align_dif(grid* g, player* p, int x, int y) {
   if ((x + 3) < NB_COL && (y - 3) >= 0 && g->g[x][y] == p->number_player &&
       g->g[x + 1][y - 1] == p->number_player &&
       g->g[x + 2][y - 2] == p->number_player &&
@@ -64,13 +33,7 @@ int left_diagonal_align(grid* g, player* p, int x, int y) {
   return 0;
 }
 
-/**
- * @brief Returns 1 if the player has a right diagonal align at given
- * coordinates, 0 else
- * @param grid * g, player * p, int x, int y
- * @return int
- */
-int right_diagonal_align(grid* g, player* p, int x, int y) {
+int right_diagonal_align_dif(grid* g, player* p, int x, int y) {
   if ((x - 3) >= 0 && (y - 3 >= 0) && g->g[x][y] == p->number_player &&
       g->g[x - 1][y - 1] == p->number_player &&
       g->g[x - 2][y - 2] == p->number_player &&
@@ -80,23 +43,18 @@ int right_diagonal_align(grid* g, player* p, int x, int y) {
   return 0;
 }
 
-/**
- * @brief Returns 1 if the player has a win, else, return 0
- * @param grid * g, player * p
- * @return int
- */
 int check_win(grid* g, player* ally, player* enemy) {
   for (int i = 0; i < NB_COL; i++) {
     for (int j = 0; j < NB_LINES; j++) {
-      if (vertical_align(g, ally, i, j) == 1 ||
+      if (vertical_align_dif(g, ally, i, j) == 1 ||
           horizontal_align(g, ally, i, j) == 1 ||
-          left_diagonal_align(g, ally, i, j) == 1 ||
-          right_diagonal_align(g, ally, i, j) == 1) {
+          left_diagonal_align_dif(g, ally, i, j) == 1 ||
+          right_diagonal_align_dif(g, ally, i, j) == 1) {
         return 1;
-      } else if (vertical_align(g, enemy, i, j) == 1 ||
+      } else if (vertical_align_dif(g, enemy, i, j) == 1 ||
                  horizontal_align(g, enemy, i, j) == 1 ||
-                 left_diagonal_align(g, enemy, i, j) == 1 ||
-                 right_diagonal_align(g, enemy, i, j) == 1) {
+                 left_diagonal_align_dif(g, enemy, i, j) == 1 ||
+                 right_diagonal_align_dif(g, enemy, i, j) == 1) {
         return -1;
       }
     }
@@ -104,12 +62,6 @@ int check_win(grid* g, player* ally, player* enemy) {
   return 0;
 }
 
-/**
- * @brief Return the length of the align beginning at the coordinates
- * (x, y), returns 0 if no align or only locked ones
- * @param grid *g, player * p, int x, int y
- * @return int count, the length of the align
- * */
 int count_align_horizontal(grid* g, player* p, int x, int y) {
   int count = 0;
   int l = y;
@@ -120,19 +72,22 @@ int count_align_horizontal(grid* g, player* p, int x, int y) {
       c++;
       count++;
     }
-    if (c == NB_COL || g->g[c][l] != 0 && g->g[c][l] != p->number_player) {
+    if (c == NB_COL || g->g[c][l] != 0 || g->g[c][l] != p->number_player) {
       return 0;  // Case of locked align, by edges of the grid or enemy player
     }
   }
-  return count;
+  if (count == 1) {
+    return 1;
+  }
+  if (count == 2) {
+    return 50;
+  }
+  if (count == 3) {
+    return 200;
+  }
+  return 0;
 }
 
-/**
- * @brief Return the length of the align beginning at the coordinates
- * (x, y), returns 0 if no align or only locked ones
- * @param grid *g, player * p, int x, int y
- * @return int count, the length of the align
- * */
 int count_align_vertical(grid* g, player* p, int x, int y) {
   int count = 0;
   int l = y;
@@ -146,19 +101,22 @@ int count_align_vertical(grid* g, player* p, int x, int y) {
     if (y - 1 >= 0 && g->g[x][y - 1] == g->g[x][y]) {
       return 0;
     }
-    if (l == NB_LINES || g->g[c][l] != 0 && g->g[c][l] != p->number_player) {
+    if (l == NB_LINES || g->g[c][l] != 0 || g->g[c][l] != p->number_player) {
       return 0;  // Case of locked align, by edges of the grid or enemy player
     }
   }
-  return count;
+  if (count == 1) {
+    return 1;
+  }
+  if (count == 2) {
+    return 50;
+  }
+  if (count == 3) {
+    return 200;
+  }
+  return 0;
 }
 
-/**
- * @brief Return the length of the align beginning at the coordinates
- * (x, y), returns 0 if no align or only locked ones
- * @param grid *g, player * p, int x, int y
- * @return int count, the length of the align
- * */
 int count_align_left_diagonal(grid* g, player* p, int x, int y) {
   int count = 0;
   int l = y;
@@ -173,20 +131,23 @@ int count_align_left_diagonal(grid* g, player* p, int x, int y) {
     if (x - 1 >= 0 && y + 1 < NB_LINES && g->g[x - 1][y + 1] == g->g[x][y]) {
       return 0;
     }
-    if (c == NB_COL || l == NB_LINES ||
-        g->g[c][l] != 0 && g->g[c][l] != p->number_player) {
+    if (c == NB_COL || l == NB_LINES || g->g[c][l] != 0 ||
+        g->g[c][l] != p->number_player) {
       return 0;  // Case of locked align, by edges of the grid or enemy player
     }
   }
-  return count;
+  if (count == 1) {
+    return 1;
+  }
+  if (count == 2) {
+    return 50;
+  }
+  if (count == 3) {
+    return 200;
+  }
+  return 0;
 }
 
-/**
- * @brief Return the length of the align beginning at the coordinates
- * (x, y), returns 0 if no align or only locked ones
- * @param grid *g, player * p, int x, int y
- * @return int count, the length of the align
- * */
 int count_align_right_diagonal(grid* g, player* p, int x, int y) {
   int count = 0;
   int l = y;
@@ -201,30 +162,28 @@ int count_align_right_diagonal(grid* g, player* p, int x, int y) {
     if (y - 1 >= 0 && x - 1 >= 0 && g->g[x - 1][y - 1] == g->g[x][y]) {
       return 0;
     }
-    if (c == NB_COL || l == NB_LINES ||
-        g->g[c][l] != 0 && g->g[c][l] != p->number_player) {
+    if (c == NB_COL || l == NB_LINES || g->g[c][l] != 0 ||
+        g->g[c][l] != p->number_player) {
       return 0;  // Case of locked align, by edges of the grid or enemy player
     }
   }
-  return count;
+  if (count == 1) {
+    return 1;
+  }
+  if (count == 2) {
+    return 50;
+  }
+  if (count == 3) {
+    return 200;
+  }
+  return 0;
 }
 
-/**
- * @brief Add a pawn of the given player to the given column, this function is
- * only used by the algorithm which tries to find the best move
- * @param grid *g , player * p, int col
- * @return None
- */
 void simulate_move(grid* g, player* p, int col) {
   int i = get_line(g, col);
   g->g[col][i] = p->number_player;
 }
 
-/**
- * @brief Returns the lowest free tile of a given column of the grid
- * @param grid * g,  int column
- * @return int
- */
 int get_line(grid* g, int column) {
   int i;
   for (i = 0; i < NB_LINES; i++) {
@@ -235,37 +194,33 @@ int get_line(grid* g, int column) {
   return -1;
 }
 
-/**
- * @brief Calculates the score of the current state of the grid
- * @param grid * g, player * ally, player * enemy
- * @return int score
- */
 int get_score(grid* g, player* ally, player* enemy) {
-  int score = 0;
+  int ally_score = 0;
+  int enemy_score = 0;
   for (int i = 0; i < NB_COL; i++) {
     for (int j = 0; j < NB_LINES; j++) {
-      score += count_align_horizontal(g, ally, i, j);
-      score += count_align_vertical(g, ally, i, j);
-      score += count_align_left_diagonal(g, ally, i, j);
-      score += count_align_right_diagonal(g, ally, i, j);
+      ally_score += count_align_horizontal(g, ally, i, j);
+      ally_score += count_align_vertical(g, ally, i, j);
+      ally_score += count_align_left_diagonal(g, ally, i, j);
+      ally_score += count_align_right_diagonal(g, ally, i, j);
 
-      score -= count_align_horizontal(g, enemy, i, j);
-      score -= count_align_vertical(g, enemy, i, j);
-      score -= count_align_left_diagonal(g, enemy, i, j);
-      score -= count_align_right_diagonal(g, enemy, i, j);
+      enemy_score += count_align_horizontal(g, enemy, i, j);
+      enemy_score += count_align_vertical(g, enemy, i, j);
+      enemy_score += count_align_left_diagonal(g, enemy, i, j);
+      enemy_score += count_align_right_diagonal(g, enemy, i, j);
     }
   }
-  return score;
+  return ally_score - enemy_score;
 }
 
-/**
- * @brief Gives the best column based on the evaluation of the 3 moves ahead,
- * and a calculated score
- * @param
- * @return
- */
-int get_best_column(grid* g, player* ally, player* enemy) {
-  int* scores = malloc((NB_COL - 1) * sizeof(int*));
+int get_best_column(grid* g, player* ally) {
+  player enemy;
+  if (ally->number_player == 1) {
+    enemy.number_player = 2;
+  } else {
+    enemy.number_player = 1;
+  }
+  int* scores = (int*)malloc((NB_COL - 1) * sizeof(int));
   int score = -10000000;
   for (int i = 0; i < NB_COL; i++) {
     if (get_line(g, i) != -1) {
@@ -278,30 +233,29 @@ int get_best_column(grid* g, player* ally, player* enemy) {
     if (get_line(g, i) != -1) {
       grid g_cpy1 = *g;
       simulate_move(&g_cpy1, ally, i);
-      if (check_win(&g_cpy1, ally, enemy) == 1) {
+      if (check_win(&g_cpy1, ally, &enemy) == 1) {
+        free(scores);
         return i;  // the ai can win immediately
       } else {
-        scores[i] += (get_score(&g_cpy1, ally, enemy));
+        scores[i] += (get_score(&g_cpy1, ally, &enemy));
       }
-      // Check enemy move
+      // Check &enemy move
       for (int j = 0; j < NB_COL; j++) {
         if (get_line(&g_cpy1, i) != -1) {
           grid g_cpy2 = g_cpy1;
-          simulate_move(&g_cpy2, enemy, j);
-          if (check_win(&g_cpy2, ally, enemy) == -1) {
+          simulate_move(&g_cpy2, &enemy, j);
+          if (check_win(&g_cpy2, ally, &enemy) == -1) {
+            free(scores);
             return i;  // The ai needs to defend
           } else {
-            scores[i] -= (get_score(&g_cpy2, ally, enemy));
+            scores[i] -= (get_score(&g_cpy2, ally, &enemy));
           }
-          // Check second move of the ai (after enemy move)
+          // Check second move of the ai (after &enemy move)
           for (int k = 0; k < NB_COL; k++) {
             if (get_line(&g_cpy2, i) != -1) {
               grid g_cpy3 = g_cpy2;
               simulate_move(&g_cpy3, ally, k);
-              /*if (check_win(g, ally, enemy) == 1) {
-                return i;  // best move is no move is predictable at the moment
-              }*/
-              scores[i] += get_score(&g_cpy3, ally, enemy);
+              scores[i] += get_score(&g_cpy3, ally, &enemy);
             }
           }
         }
@@ -315,7 +269,6 @@ int get_best_column(grid* g, player* ally, player* enemy) {
     printf("%d |\n", scores[i]);
   }
   printf("Fin affichage tableau de scores\n");
-  // Trouver la colonne contenant le score le plus favorable
   int best_score = -1000000;
   int best_col = -1;
   for (int i = 0; i < NB_COL; i++) {
